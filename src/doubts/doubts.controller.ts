@@ -19,16 +19,16 @@ export class DoubtsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.doubtsService.findOne(+id);
+    return this.doubtsService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateDoubtDto: UpdateDoubtDto) {
-    return this.doubtsService.update(+id, updateDoubtDto);
+    return this.doubtsService.update(id, updateDoubtDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.doubtsService.remove(+id);
+    return this.doubtsService.remove(id);
   }
 }

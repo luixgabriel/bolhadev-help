@@ -7,10 +7,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class UsersService {
 
   constructor(private prisma: PrismaService){}
-  async create(body: CreateUserDto) {
+  async create(data: CreateUserDto) {
     try {
       const user = await this.prisma.user.create({
-        data: body
+        data
       })
       return user
     } catch (error) {
@@ -43,7 +43,7 @@ export class UsersService {
    
   }
 
-  async update(id: string, body: UpdateUserDto) {
+  async update(id: string, data: UpdateUserDto) {
     try {
       let user = await this.findOne(id)
       if(!user) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
@@ -51,7 +51,7 @@ export class UsersService {
         where: {
           id
         },
-        data: body
+        data
       })
       return user
     } catch (error) {
