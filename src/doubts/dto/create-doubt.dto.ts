@@ -21,6 +21,5 @@ import {
     @IsString()
     userId: string;
   
-   
   }
   

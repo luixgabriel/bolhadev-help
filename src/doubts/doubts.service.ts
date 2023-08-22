@@ -25,24 +25,68 @@ constructor(private prisma: PrismaService){}
   }
 
   async findAll() {
-    return `This action returns all doubts`;
+    try {
+      const doubts = await this.prisma.doubts.findMany({
+        select: {
+          id: true,
+          title: true,
+          category: true,
+          image: true,
+          description: true,
+          createdAt: true,
+          Answers: true,
+          user: {
+            select: {
+              name: true
+            }
+          }
+        }
+      })
+      return doubts
+    } catch (error) {
+      console.log(error)
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
+    }
   }
 
   async findOne(id: string) {
-    return `This action returns a #${id} doubt`;
+    if(!await this.check(id)) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+    try {
+      const doubt = await this.prisma.doubts.findFirstOrThrow({where:{
+        id
+      }})
+      return doubt
+    } catch (error) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+    }
   }
 
-  async update(id: string, updateDoubtDto: UpdateDoubtDto) {
-    return `This action updates a #${id} doubt`;
+  async update(id: string, data: UpdateDoubtDto) {
+   if(!await this.check(id)) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+   try {
+    const doubt = await this.prisma.doubts.update({where: {
+      id
+    }, data})
+    return doubt
+    } catch (error) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+    }
   }
 
   async remove(id: string) {
-    return `This action removes a #${id} doubt`;
+    try {
+      const doubt = await this.prisma.doubts.delete({where:{
+        id
+      }})
+      return doubt
+    } catch (error) {
+      console.log(error)
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
+    }
   }
 
   async check(id: string){
     try {
-      console.log('chamei')
       return await this.prisma.user.findUnique({where:{id}})
     } catch (error) {
       console.log(error)

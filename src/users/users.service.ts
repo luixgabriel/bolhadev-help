@@ -28,7 +28,6 @@ export class UsersService {
       console.log(error)
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
     }
-    
   }
 
   async findOne(id: string) {
