@@ -1,26 +1,75 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+
+  constructor(private prisma: PrismaService){}
+  async create(body: CreateUserDto) {
+    try {
+      const user = await this.prisma.user.create({
+        data: body
+      })
+      return user
+    } catch (error) {
+      console.log(error)
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
+    }
+    
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    try {
+      const user = await this.prisma.user.findMany()
+      return user
+    } catch (error) {
+      console.log(error)
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
+    }
+    
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    try {
+      const user = await this.prisma.user.findFirstOrThrow({where:{
+        id
+      }})
+      return user
+    } catch (error) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+    }
+   
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, body: UpdateUserDto) {
+    try {
+      let user = await this.findOne(id)
+      if(!user) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+      user = await this.prisma.user.update({
+        where: {
+          id
+        },
+        data: body
+      })
+      return user
+    } catch (error) {
+      console.log(error)
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+    }
+    
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    try {
+      const user = await this.prisma.user.delete({where:{
+        id
+      }})
+      return user
+    } catch (error) {
+      console.log(error)
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
+    }
   }
 }
