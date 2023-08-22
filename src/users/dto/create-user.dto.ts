@@ -4,7 +4,9 @@ import {
   IsNotEmpty,
   IsArray,
   IsOptional,
+  IsEnum,
 } from 'class-validator';
+import { usersRole } from 'src/types/users-role';
 
 export class CreateUserDto {
   @IsString()
@@ -16,8 +18,9 @@ export class CreateUserDto {
   @IsNotEmpty()
   password: string;
 
-  @IsNotEmpty()
-  roles: string;
+  @IsEnum(usersRole)
+  @IsOptional()
+  roles: usersRole
 
   @IsArray()
   @IsOptional()
