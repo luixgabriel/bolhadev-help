@@ -9,25 +9,29 @@ import { AuthResetDTO } from './dto/auth-reset.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService, private readonly usersSevice: UsersService) {}
+  constructor(
+      private readonly authService: AuthService,
+      private readonly usersSevice: UsersService
+      ) {}
 
   @Post('login')
     async login(@Body() data: AuthLoginDTO) {
-      return this.authService.createToken(data);
-  }
+     return this.authService.login(data) 
+    }
 
   @Post('register')
     async register(@Body() data: AuthRegisterDTO) {
-      return this.usersSevice.create(data)
+      return this.authService.register(data)
   }
 
   @Post('forget')
     async forget(@Body() data: AuthForgetDTO){
+      this.authService.forget(data.email)
   }
 
   @Post('reset')
   async reset(@Body() data: AuthResetDTO){
-
+    console.log(data)
   }
 
 }

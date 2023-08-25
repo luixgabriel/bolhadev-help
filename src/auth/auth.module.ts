@@ -12,7 +12,7 @@ import { PrismaModule } from "src/prisma/prisma.module";
     UsersModule,
     PrismaModule],
     controllers: [AuthController],
-    exports: [AuthService]
+    providers: [AuthService]
 })
 
 export class AuthModule {
