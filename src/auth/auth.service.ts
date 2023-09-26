@@ -1,4 +1,4 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common'
+import {HttpException, HttpStatus, Injectable, BadRequestException} from '@nestjs/common'
 import {JwtService} from '@nestjs/jwt'
 import { AuthLoginDTO } from './dto/auth-login.dto'
 import { PrismaService } from 'src/prisma/prisma.service'
@@ -14,8 +14,8 @@ export class AuthService {
             private readonly userService: UsersService
          ){}
 
-    async createToken(user: User){
-       const token = await this.jwtService.sign({
+    createToken(user: User){
+       const token = this.jwtService.sign({
             id: user.id,
             email: user.email,
             name: user.name
@@ -23,14 +23,29 @@ export class AuthService {
             expiresIn: '7 days',
             issuer: 'bolhadev-help'
         })
+        console.log(token)
 
         return {
             token: token
         }
     }
 
-    async checkToken(){
+  checkToken(token: string){
+        try {
+            const data = this.jwtService.verify(token, {issuer: 'bolhadev-help'})
+            return data
+        } catch (error) {
+            throw new BadRequestException(error)
+        }
+    }
 
+    isValidToken(token: string){
+        try {
+            this.checkToken(token)
+            return true    
+        } catch (error) {
+            return false
+        }
     }
 
     async login(data: AuthLoginDTO){
