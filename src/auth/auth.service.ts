@@ -1,10 +1,11 @@
-import {HttpException, HttpStatus, Injectable, BadRequestException} from '@nestjs/common'
+import {HttpException, HttpStatus, Injectable, BadRequestException, UnauthorizedException} from '@nestjs/common'
 import {JwtService} from '@nestjs/jwt'
 import { AuthLoginDTO } from './dto/auth-login.dto'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { User } from '@prisma/client'
 import { UsersService } from 'src/users/users.service'
 import { AuthRegisterDTO } from './dto/auth-register.dto'
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -57,6 +58,9 @@ export class AuthService {
             })
             if(!user) throw new HttpException('Invalid credentials.',HttpStatus.UNAUTHORIZED)
 
+            if (!await bcrypt.compare(data.password, user.password)) {
+                throw new UnauthorizedException('E-mail e/ou senha incorretos.');
+            }
             return this.createToken(user)
             
         } catch (error) {
