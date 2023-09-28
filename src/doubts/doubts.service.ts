@@ -8,7 +8,6 @@ export class DoubtsService {
 
 constructor(private prisma: PrismaService){}
  async create(data: CreateDoubtDto) {
-  
   if(!await this.check(data.userId)) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
     try {
       const doubt = await this.prisma.doubts.create({

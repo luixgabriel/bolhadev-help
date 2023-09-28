@@ -1,15 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } from '@nestjs/common';
+import {UploadedFile} from '@nestjs/common/decorators'
 import { DoubtsService } from './doubts.service';
 import { CreateDoubtDto } from './dto/create-doubt.dto';
 import { UpdateDoubtDto } from './dto/update-doubt.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { join } from 'path';
+import { diskStorage } from 'multer';
 
 @Controller('doubts')
 export class DoubtsController {
   constructor(private readonly doubtsService: DoubtsService) {}
 
+  @UseInterceptors(FileInterceptor('image', 
+  {
+    storage: diskStorage({
+      destination: join(__dirname, '..', '..', 'storage'),
+      filename: (req, file, cb) => {
+        cb(null, file.originalname)
+      }
+    })
+  }))
   @Post()
-  create(@Body() createDoubtDto: CreateDoubtDto) {
-    return this.doubtsService.create(createDoubtDto);
+  create(@Body() createDoubtDto: CreateDoubtDto, @UploadedFile() image: Express.Multer.File) {
+    console.log(image)
+    const filename = image.filename;
+    const fullPath = `http://localhost:3000/${filename}`;
+    return this.doubtsService.create({...createDoubtDto, image: fullPath});
   }
 
   @Get()
