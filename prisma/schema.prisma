@@ -33,7 +33,7 @@ model Doubts {
 model Answers {
   id          String   @id @default(uuid())
   description String
-  likes       Int
+  likes       Int      @default(0)
   comments    String[]
   createdAt   DateTime @default(now())
   doubts      Doubts   @relation(fields: [doubtsId], references: [id])
