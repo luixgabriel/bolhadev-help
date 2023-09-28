@@ -79,4 +79,13 @@ export class UsersService {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
     }
   }
+
+  async check(id: string){
+    try {
+      return await this.prisma.user.findUnique({where:{id}})
+    } catch (error) {
+      console.log(error)
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+    }
+  }
 }

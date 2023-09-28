@@ -1,4 +1,4 @@
-import { IsArray, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateAnswerDto {
     @IsString()
@@ -8,10 +8,11 @@ export class CreateAnswerDto {
     @IsNumber()
     likes: number;
   
-    @IsArray()
-    comments: string[];
-  
     @IsString()
     doubtsId: string;
-  
+
+    @IsString()
+    userId: string;
 }
+  
+

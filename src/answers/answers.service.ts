@@ -2,12 +2,19 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateAnswerDto } from './dto/create-answer.dto';
 import { UpdateAnswerDto } from './dto/update-answer.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UsersService } from 'src/users/users.service';
+import { DoubtsService } from 'src/doubts/doubts.service';
 
 @Injectable()
 export class AnswersService {
-  constructor(private readonly prisma: PrismaService){}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly userService: UsersService,
+    private readonly doubtsService: DoubtsService
+    ){}
   async create(data: CreateAnswerDto) {
-    // if(!await this.check(data.userId)) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+    if(!await this.userService.check(data.userId)) throw new HttpException('Not Found User', HttpStatus.NOT_FOUND)
+    if(!await this.doubtsService.check(data.doubtsId)) throw new HttpException('Not Found Doubt', HttpStatus.NOT_FOUND)
     try {
       const doubt = await this.prisma.answers.create({
         data,
@@ -22,19 +29,65 @@ export class AnswersService {
     }
   }
 
-  findAll() {
-    return `This action returns all answers`;
+  async findAll() {
+    try {
+      const answers = await this.prisma.answers.findMany(
+        {
+          include: {
+            doubts: true,
+            user: true
+          }
+        }
+      )
+      return answers
+    } catch (error) {
+      console.log(error)
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} answer`;
+  async findOne(id: string) {
+    if(!await this.check(id)) throw new HttpException('Not Found Answer.', HttpStatus.NOT_FOUND)
+    try {
+      const answer = await this.prisma.answers.findFirstOrThrow({where:{
+        id
+      }})
+      return answer
+    } catch (error) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+    }
   }
 
-  update(id: number, updateAnswerDto: UpdateAnswerDto) {
-    return `This action updates a #${id} answer`;
+  async  update(id: string, data: UpdateAnswerDto) {
+    if(!await this.check(id)) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+    try {
+     const answers = await this.prisma.answers.update({where: {
+       id
+     }, data})
+     return answers
+     } catch (error) {
+       throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} answer`;
+  async remove(id: string) {
+    try {
+      const answer = await this.prisma.answers.delete({where:{
+        id
+      }})
+      return answer
+    } catch (error) {
+      console.log(error)
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
+    }
+  }
+
+  async check(id: string){
+    try {
+      return await this.prisma.answers.findUnique({where:{id}})
+    } catch (error) {
+      console.log(error)
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+    }
   }
 }

@@ -8,6 +8,7 @@ export class DoubtsService {
 
 constructor(private prisma: PrismaService){}
  async create(data: CreateDoubtDto) {
+  console.log(await this.check(data.userId))
   if(!await this.check(data.userId)) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
     try {
       const doubt = await this.prisma.doubts.create({
@@ -86,7 +87,7 @@ constructor(private prisma: PrismaService){}
 
   async check(id: string){
     try {
-      return await this.prisma.user.findUnique({where:{id}})
+      return await this.prisma.doubts.findUnique({where:{id}})
     } catch (error) {
       console.log(error)
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
