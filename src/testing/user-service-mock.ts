@@ -6,9 +6,11 @@ export const UserPrismaMock = {
     user: {
       create: jest.fn().mockResolvedValue(userEntityList[0]),
       findMany: jest.fn().mockResolvedValue(userEntityList),
-      findFirst: jest.fn().mockResolvedValue(userEntityList[0]),
+      findOne: jest.fn().mockResolvedValue(userEntityList[0]),
       update: jest.fn().mockResolvedValue(userEntityList[0]),
+      findFirstOrThrow: jest.fn().mockResolvedValue(userEntityList[1]),
       delete: jest.fn().mockResolvedValue(true),
+      check: jest.fn().mockResolvedValue(true)
     },
   },
 };

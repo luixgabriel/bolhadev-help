@@ -27,6 +27,7 @@ export class UsersService {
   async findAll() {
     try {
       const user = await this.prisma.user.findMany()
+      console.log(user)
       return user
     } catch (error) {
       console.log(error)
@@ -41,6 +42,7 @@ export class UsersService {
       }})
       return user
     } catch (error) {
+      console.log(error)
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
     }
    

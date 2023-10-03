@@ -4,7 +4,7 @@ export const userEntityList: User[] = [
   {
     name: 'Joao Rangel',
     email: 'joao@hcode.com.br',
-    id: '1',
+    id: '02c6a30a-3b5d-4dcc-9f04-e1eed8ac809e',
     password: '$2b$10$KTCMumuAvsZcxgEXCA4.x.sqeqtrWXmB7ptFGkF.f32XW3OE3Awb6',
   },
   {

@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { UserPrismaMock } from '../testing/user-service-mock';
 import { userEntityList } from '../testing/user-entity-list-mock';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 describe('UsersService', () => {
   let userService: UsersService;
@@ -39,5 +40,41 @@ describe('UsersService', () => {
       const result = await userService.create(data);
       expect(result).toEqual(userEntityList[0]);
     });
-  });
+
 });
+
+  describe('Find All', () => {
+    test('method find all', async ()=> {
+      const result = await userService.findAll()
+      console.log(result)
+      expect(result).toEqual(userEntityList);
+ })
+})
+
+describe('Find One', () => {
+  test('method find one', async ()=> {
+    const result = await userService.findOne('2')
+    expect(result).toEqual(userEntityList[1]);
+})
+})
+
+describe('Update Partial', () => {
+  test('method update', async ()=> {
+    const data: UpdateUserDto = {
+      name: 'Joao Rangel novo',
+      email: 'joao@hcode.com.br',
+      id: '1',
+    }
+    const result = await userService.update(data.id, data)
+    expect(result).toEqual(userEntityList[0]);
+})
+})
+
+describe('Delete', () => {
+  test('method delete', async ()=> {
+    const result = await userService.remove('2')
+    expect(result).toBe(true);
+})
+})
+
+})
