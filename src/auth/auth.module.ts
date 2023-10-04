@@ -2,17 +2,17 @@ import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
-import { UsersModule } from "src/users/users.module";
 import { PrismaModule } from "src/prisma/prisma.module";
+import { UsersModule } from "../users/users.module";
 
 @Module({
     imports: [JwtModule.register({
         secret: '123456789'
     }),
-    UsersModule,
-    PrismaModule],
+    PrismaModule, UsersModule],
     controllers: [AuthController],
-    providers: [AuthService]
+    providers: [AuthService],
+    exports:[AuthService]
 })
 
 export class AuthModule {

@@ -1,7 +1,7 @@
 import { userEntityList } from './user-entity-list-mock';
-import { UsersService } from '../users/users.service';
-export const UserServiceMock = {
-  provide: UsersService,
+import { PrismaService } from '../prisma/prisma.service';
+export const UserPrismaMock = {
+  provide: PrismaService,
   useValue: {
     user: {
       create: jest.fn().mockResolvedValue(userEntityList[0]),

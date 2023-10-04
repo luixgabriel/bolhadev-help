@@ -1,11 +1,10 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import {Req, UseGuards} from '@nestjs/common/decorators'
+import {UseGuards} from '@nestjs/common/decorators'
 import { AuthService } from './auth.service';
 import { AuthLoginDTO } from './dto/auth-login.dto';
 import { AuthRegisterDTO } from './dto/auth-register.dto';
 import { AuthForgetDTO } from './dto/auth-forget.dto';
-import { UsersService } from 'src/users/users.service';
-import { AuthResetDTO } from './dto/auth-reset.dto';
+// import { UsersService } from 'src/users/users.service';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { User } from 'src/decorators/user.decorator';
 
@@ -14,7 +13,7 @@ import { User } from 'src/decorators/user.decorator';
 export class AuthController {
   constructor(
       private readonly authService: AuthService,
-      private readonly usersSevice: UsersService
+      // private readonly usersSevice: UsersService
       ) {}
 
   @Post('login')

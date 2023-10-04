@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
-import { UserPrismaMock } from '../testing/user-service-mock';
+import { UserPrismaMock } from '../testing/user-prisma-mock';
 import { userEntityList } from '../testing/user-entity-list-mock';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -46,7 +46,6 @@ describe('UsersService', () => {
   describe('Find All', () => {
     test('method find all', async ()=> {
       const result = await userService.findAll()
-      console.log(result)
       expect(result).toEqual(userEntityList);
  })
 })
