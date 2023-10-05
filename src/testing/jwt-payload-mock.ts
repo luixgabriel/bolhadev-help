@@ -1,11 +1,9 @@
 export const jwtPayload = {
-    id: 1,
-    name: 'Glaucio Daniel',
-    email: 'glaucio@hcode.com.br',
-    iat: 1672197163,
-    exp: 1672801963,
-    aud: 'users',
-    iss: 'login',
-    sub: '1',
+  id: "34361a06-a4f7-46f3-8c23-c064b382f059",
+	email: "joao1@hcode.com.br",
+	name: "Joao Rangel",
+	iat: 1696464334,
+	exp: 1697069134,
+	iss: "bolhadev-help"
   };
   

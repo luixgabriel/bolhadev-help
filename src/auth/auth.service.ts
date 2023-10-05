@@ -24,8 +24,6 @@ export class AuthService {
             expiresIn: '7 days',
             issuer: 'bolhadev-help'
         })
-        console.log(token)
-
         return {
             token: token
         }
@@ -42,7 +40,8 @@ export class AuthService {
 
     isValidToken(token: string){
         try {
-            this.checkToken(token)
+            const test = this.checkToken(token)
+            console.log(test)
             return true    
         } catch (error) {
             return false
@@ -56,6 +55,7 @@ export class AuthService {
                     email: data.email
                 }
             })
+            console.log(user)
             if(!user) throw new HttpException('Invalid credentials.',HttpStatus.UNAUTHORIZED)
 
             if (!await bcrypt.compare(data.password, user.password)) {
@@ -64,7 +64,7 @@ export class AuthService {
             return this.createToken(user)
             
         } catch (error) {
-            console.log(error)
+            throw new HttpException('Invalid credentials.',HttpStatus.UNAUTHORIZED)
         }
        
     }
