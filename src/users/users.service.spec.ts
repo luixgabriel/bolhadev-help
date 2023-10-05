@@ -20,12 +20,6 @@ describe('UsersService', () => {
     expect(userService).toBeDefined();
   });
 
-  it('sum', ()=> {
-    function sum(a, b){
-      return a + b;
-    }
-    expect(sum(1,2)).toBe(3);
-  })
 
   describe('Create', () => {
     test('method create', async () => {

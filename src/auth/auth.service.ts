@@ -40,8 +40,7 @@ export class AuthService {
 
     isValidToken(token: string){
         try {
-            const test = this.checkToken(token)
-            console.log(test)
+            this.checkToken(token)
             return true    
         } catch (error) {
             return false
@@ -55,7 +54,6 @@ export class AuthService {
                     email: data.email
                 }
             })
-            console.log(user)
             if(!user) throw new HttpException('Invalid credentials.',HttpStatus.UNAUTHORIZED)
 
             if (!await bcrypt.compare(data.password, user.password)) {
@@ -74,22 +72,4 @@ export class AuthService {
         return this.createToken(user)
     }
 
-    async forget(email: string) {
-        try {
-            const user = await this.prismaService.user.findFirst({
-                where: {
-                    email
-                }
-            });
-
-            if(!user) throw new HttpException('Email invalid.',HttpStatus.UNAUTHORIZED)
-    
-        } catch (error) {
-            
-        }
-    }
-
-    // async reset(password: string, token: string){
-
-    // }
 }
