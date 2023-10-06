@@ -13,6 +13,7 @@ import { AuthServiceMock } from '../testing/auth-service-mock';
 import { jwtPayload } from '../testing/jwt-payload-mock';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import loginMock from '../testing/login-mock';
 
 
 describe('AuthService', () => {
@@ -42,6 +43,7 @@ describe('AuthService', () => {
     it('create token', ()=>{
       const result = authService.createToken(userEntityList[0])
       expect(result.token).toEqual(accessToken)
+      expect(result).toEqual(loginMock)
     })
 
     it('check token', ()=> {

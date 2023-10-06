@@ -25,7 +25,10 @@ export class AuthService {
             issuer: 'bolhadev-help'
         })
         return {
-            token: token
+            token: token,
+            id: user.id,
+            name: user.name,
+            email: user.email
         }
     }
 
