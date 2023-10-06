@@ -33,10 +33,28 @@ export class AnswersService {
     try {
       const answers = await this.prisma.answers.findMany(
         {
-          include: {
-            doubts: true,
-            user: true
+          select: {
+            id: true,
+            description: true,
+            likes: true,
+            createdAt: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              }
+            },
+            doubts: {
+              select: {
+                id: true,
+                description: true,
+                createdAt: true,
+                userId: true
+              }
+            }
           }
+         
         }
       )
       return answers
@@ -58,7 +76,7 @@ export class AnswersService {
     }
   }
 
-  async  update(id: string, data: UpdateAnswerDto) {
+  async update(id: string, data: UpdateAnswerDto) {
     if(!await this.check(id)) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
     try {
      const answers = await this.prisma.answers.update({where: {
@@ -68,6 +86,14 @@ export class AnswersService {
      } catch (error) {
        throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
      }
+  }
+
+  async like(id: string){
+    if(!await this.check(id)) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+    let answer = await this.findOne(id)
+    answer = await this.update(answer.id, {likes: answer.likes + 1})
+    return answer
+    
   }
 
   async remove(id: string) {
