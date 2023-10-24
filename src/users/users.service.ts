@@ -1,8 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Res } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { Response } from 'express';
 
 @Injectable()
 export class UsersService {
@@ -16,9 +17,9 @@ export class UsersService {
       const user = await this.prisma.user.create({
         data
       })
+      delete user.password
       return user
     } catch (error) {
-      console.log(error)
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
     }
     
@@ -27,7 +28,6 @@ export class UsersService {
   async findAll() {
     try {
       const user = await this.prisma.user.findMany()
-      console.log(user)
       return user
     } catch (error) {
       console.log(error)
@@ -62,6 +62,7 @@ export class UsersService {
         },
         data
       })
+      delete user.password
       return user
     } catch (error) {
       console.log(error)
@@ -70,14 +71,18 @@ export class UsersService {
     
   }
 
-  async remove(id: string) {
+  async remove(id: string, @Res() res: Response) {
     try {
-      const user = await this.prisma.user.delete({where:{
+      await this.findOne(id);
+    } catch (error) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+    }
+    try {
+      await this.prisma.user.delete({where:{
         id
       }})
-      return user
+      return res.status(HttpStatus.NO_CONTENT)
     } catch (error) {
-      console.log(error)
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
     }
   }

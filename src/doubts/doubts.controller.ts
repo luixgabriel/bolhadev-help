@@ -1,11 +1,12 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } from '@nestjs/common';
-import {UploadedFile} from '@nestjs/common/decorators'
+import {Res, UploadedFile} from '@nestjs/common/decorators'
 import { DoubtsService } from './doubts.service';
 import { CreateDoubtDto } from './dto/create-doubt.dto';
 import { UpdateDoubtDto } from './dto/update-doubt.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
 import { diskStorage } from 'multer';
+import { Response } from 'express';
 
 @Controller('doubts')
 export class DoubtsController {
@@ -20,12 +21,16 @@ export class DoubtsController {
       }
     })
   }))
+
   @Post()
   create(@Body() createDoubtDto: CreateDoubtDto, @UploadedFile() image: Express.Multer.File) {
-    console.log(image)
-    const filename = image.filename;
-    const fullPath = `http://localhost:3000/${filename}`;
-    return this.doubtsService.create({...createDoubtDto, image: fullPath});
+    if(image){
+      const filename = image.filename;
+      const fullPath = `http://localhost:3000/${filename}`;
+      return this.doubtsService.create({...createDoubtDto, image: fullPath});
+    }else{
+      return this.doubtsService.create(createDoubtDto);
+    }
   }
 
   @Get()
@@ -44,7 +49,7 @@ export class DoubtsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.doubtsService.remove(id);
+  remove(@Param('id') id: string, @Res() res: Response) {
+    return this.doubtsService.remove(id, res);
   }
 }

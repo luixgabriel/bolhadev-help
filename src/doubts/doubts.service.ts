@@ -1,15 +1,16 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Res } from '@nestjs/common';
 import { CreateDoubtDto } from './dto/create-doubt.dto';
 import { UpdateDoubtDto } from './dto/update-doubt.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UsersService } from '../users/users.service';
+import { Response } from 'express';
 
 @Injectable()
 export class DoubtsService {
 
-constructor(private prisma: PrismaService){}
+constructor(private prisma: PrismaService, private userService: UsersService){}
  async create(data: CreateDoubtDto) {
-  console.log(await this.check(data.userId))
-  if(!await this.check(data.userId)) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+  if(!await this.userService.check(data.userId)) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
     try {
       const doubt = await this.prisma.doubts.create({
         data,
@@ -73,12 +74,12 @@ constructor(private prisma: PrismaService){}
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string, @Res() res: Response) {
     try {
-      const doubt = await this.prisma.doubts.delete({where:{
+      await this.prisma.doubts.delete({where:{
         id
       }})
-      return doubt
+      return res.status(HttpStatus.NO_CONTENT)
     } catch (error) {
       console.log(error)
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
