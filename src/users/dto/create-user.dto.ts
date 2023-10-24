@@ -13,6 +13,10 @@ export class CreateUserDto {
   id: string
 
   @IsString()
+  @IsOptional()
+  githubId: string
+
+  @IsString()
   name: string;
 
   @IsEmail()

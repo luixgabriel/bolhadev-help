@@ -81,7 +81,7 @@ export class UsersService {
       await this.prisma.user.delete({where:{
         id
       }})
-      return res.status(HttpStatus.NO_CONTENT)
+      return res.status(HttpStatus.NO_CONTENT).json({})
     } catch (error) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
     }

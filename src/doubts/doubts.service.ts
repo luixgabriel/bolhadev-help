@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, Res } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Res} from '@nestjs/common';
 import { CreateDoubtDto } from './dto/create-doubt.dto';
 import { UpdateDoubtDto } from './dto/update-doubt.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -62,8 +62,11 @@ constructor(private prisma: PrismaService, private userService: UsersService){}
     }
   }
 
-  async update(id: string, data: UpdateDoubtDto) {
-   if(!await this.check(id)) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+  async update(id: string, userId: string, data: UpdateDoubtDto) {
+   if(!await this.isOwner(id, userId)){
+    throw new HttpException('Esse usuário não é o usuário que criou o recurso.', HttpStatus.BAD_REQUEST)
+   }
+
    try {
     const doubt = await this.prisma.doubts.update({where: {
       id
@@ -74,12 +77,15 @@ constructor(private prisma: PrismaService, private userService: UsersService){}
     }
   }
 
-  async remove(id: string, @Res() res: Response) {
+  async remove(id: string, userId: string, @Res() res: Response) {
+    if(!await this.isOwner(id, userId)){
+      throw new HttpException('Esse usuário não é o usuário que criou o recurso.', HttpStatus.BAD_REQUEST)
+     }
     try {
-      await this.prisma.doubts.delete({where:{
+     await this.prisma.doubts.delete({where:{
         id
       }})
-      return res.status(HttpStatus.NO_CONTENT)
+      return res.status(HttpStatus.NO_CONTENT).json({})
     } catch (error) {
       console.log(error)
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
@@ -94,4 +100,9 @@ constructor(private prisma: PrismaService, private userService: UsersService){}
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
     }
   }
+
+  async isOwner(id: string, userId: string): Promise<boolean> {
+    const doubt = await this.findOne(id);
+    return doubt.userId === userId;
+}
 }

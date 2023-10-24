@@ -1,12 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } from '@nestjs/common';
-import {Res, UploadedFile} from '@nestjs/common/decorators'
+import {Req, Res, UploadedFile, UseGuards} from '@nestjs/common/decorators'
 import { DoubtsService } from './doubts.service';
 import { CreateDoubtDto } from './dto/create-doubt.dto';
 import { UpdateDoubtDto } from './dto/update-doubt.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
 import { diskStorage } from 'multer';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('doubts')
 export class DoubtsController {
@@ -43,13 +44,15 @@ export class DoubtsController {
     return this.doubtsService.findOne(id);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDoubtDto: UpdateDoubtDto) {
-    return this.doubtsService.update(id, updateDoubtDto);
+  update(@Param('id') id: string, @Body() updateDoubtDto: UpdateDoubtDto, @Req() request: Request) {
+    return this.doubtsService.update(id, request.user.id, updateDoubtDto);
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string, @Res() res: Response) {
-    return this.doubtsService.remove(id, res);
+  remove(@Param('id') id: string,@Req() request: Request, @Res() res: Response) {
+    return this.doubtsService.remove(id,request.user.id, res);
   }
 }

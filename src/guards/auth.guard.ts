@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { AuthService } from "src/auth/auth.service";
 import { UsersService } from "src/users/users.service";
 
@@ -15,7 +15,7 @@ export class AuthGuard implements CanActivate {
         request.user = user
         return true            
         } catch (error) {
-            return false
+        throw new HttpException('Rota não autorizada, Por favor envie o token.', HttpStatus.UNAUTHORIZED)
         }
     }
 }
