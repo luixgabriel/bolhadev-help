@@ -52,6 +52,14 @@ export class AnswersService {
                 createdAt: true,
                 userId: true
               }
+            },
+            Comment: {
+              select: {
+                id: true,
+                content: true,
+                likes: true,
+                createdAt: true
+              }
             }
           }
          

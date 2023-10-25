@@ -8,6 +8,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AnswersModule } from './answers/answers.module';
 import { GithubService } from './github/github.service';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { GithubService } from './github/github.service';
     }),
     UsersModule, 
     DoubtsModule, 
-    AuthModule, AnswersModule,
+    AuthModule, AnswersModule, CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService, GithubService],

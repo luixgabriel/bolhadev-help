@@ -35,14 +35,28 @@ constructor(private prisma: PrismaService, private userService: UsersService){}
           image: true,
           description: true,
           createdAt: true,
-          Answers: true,
           user: {
             select: {
               name: true
             }
-          }
+          },
+          Answers: {
+            select: {
+              description: true,
+              likes: true,
+              createdAt: true,
+              Comment: {
+                select: {
+                  content: true,
+                  likes: true,
+                  createdAt: true,
+                }
+              }
+            }
+          },
         }
-      })
+      });
+      
       return doubts
     } catch (error) {
       console.log(error)
