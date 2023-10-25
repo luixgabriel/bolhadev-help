@@ -92,7 +92,6 @@ export class AuthService {
             },
           )
           const { access_token } = accessTokenResponse.data
-      
           const userResponse = await axios.get('https://api.github.com/user', {
             headers: {
               Authorization: `Bearer ${access_token}`,
@@ -101,7 +100,6 @@ export class AuthService {
          
             const user = await this.userService.findByGithubId(userResponse.data.id)
             if(user) return this.createToken(user)
-            console.log('oi')
           const data: AuthRegisterDTO = {
             githubId: userResponse.data.id,
             name: userResponse.data.name as string,    
