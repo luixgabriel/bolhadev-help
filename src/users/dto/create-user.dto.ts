@@ -10,11 +10,11 @@ import {
 export class CreateUserDto {
   @IsString()
   @IsOptional()
-  id: string
+  id?: string
 
   @IsString()
   @IsOptional()
-  githubId: string
+  githubId: number
 
   @IsString()
   name: string;
@@ -27,9 +27,9 @@ export class CreateUserDto {
 
   @IsArray()
   @IsOptional()
-  doubts: string[];
+  doubts?: string[];
 
   @IsArray()
   @IsOptional()
-  answers: string[];
+  answers?: string[];
 }

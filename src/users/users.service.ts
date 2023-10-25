@@ -10,7 +10,7 @@ export class UsersService {
 
   constructor(private prisma: PrismaService){}
   async create(data: CreateUserDto) {
-  
+    console.log(data)
     const salt = await bcrypt.genSalt();
     data.password = await bcrypt.hash(data.password, salt);
     try {
@@ -20,6 +20,7 @@ export class UsersService {
       delete user.password
       return user
     } catch (error) {
+      console.log(error)
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
     }
     
@@ -46,6 +47,17 @@ export class UsersService {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
     }
    
+  }
+
+  async findByGithubId(id: number){
+    try {
+      const user = await this.prisma.user.findFirstOrThrow({where:{
+        githubId: id
+      }})
+      return user
+    } catch (error) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+    }
   }
 
   async update(id: string, data: UpdateUserDto) {

@@ -6,6 +6,7 @@ import { AuthRegisterDTO } from './dto/auth-register.dto'
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service'
 import { UsersService } from '../users/users.service'
+import axios from 'axios'
 
 @Injectable()
 export class AuthService {
@@ -73,6 +74,41 @@ export class AuthService {
     async register(data: AuthRegisterDTO){
         const user = await this.userService.create(data)
         return this.createToken(user)
+    }
+
+    async githubAuth(code: string){
+        const accessTokenResponse = await axios.post(
+            'https://github.com/login/oauth/access_token',
+            null,
+            {
+                params: {
+                client_id: process.env.GITHUB_CLIENT_ID,
+                client_secret: process.env.GITHUB_CLIENT_SECRET,
+                code,
+              },
+              headers: {
+                Accept: 'application/json',
+              },
+            },
+          )
+          const { access_token } = accessTokenResponse.data
+      
+          const userResponse = await axios.get('https://api.github.com/user', {
+            headers: {
+              Authorization: `Bearer ${access_token}`,
+            },
+          })
+         
+            const user = await this.userService.findByGithubId(userResponse.data.id)
+            if(user) return this.createToken(user)
+            console.log('oi')
+          const data: AuthRegisterDTO = {
+            githubId: userResponse.data.id,
+            name: userResponse.data.name as string,    
+            email: userResponse.data.email ? userResponse.data.email : `${userResponse.data.login}@gmail.com` as string,
+            password: userResponse.data.name + userResponse.data.id
+        }
+          return this.register(data)
     }
 
 }

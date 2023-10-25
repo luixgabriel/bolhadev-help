@@ -4,23 +4,18 @@ import { Strategy, VerifyCallback } from 'passport-github2';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class GithubStrategy extends PassportStrategy(Strategy, 'google') {
+export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     constructor() {
         super({
-            clientID: '149883907678-a3hbaav1d513uujomiptve3jm7thh6dg.apps.googleusercontent.com',
-            clientSecret: 'z5BYROvv8R6dlnaIt3W50a5m',
-            callbackURL: 'http://localhost:5000/auth/google/callback',
-            scope: ['email', 'profile'],
+            clientID: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+            callbackURL: 'http://localhost:3000/api/auth/github',
         });
     }
     async validate(accessToken: string, refreshToken: string, profile: any, done: VerifyCallback): Promise<any> {
-        const { name, emails, photos } = profile
+       console.log(profile)
         const user = {
-            email: emails[0].value,
-            firstName: name.givenName,
-            lastName: name.familyName,
-            picture: photos[0].value,
-            accessToken
+            profile
         }
         done(null, user);
     }
