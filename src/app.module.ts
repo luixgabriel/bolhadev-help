@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AnswersModule } from './answers/answers.module';
+import { GithubService } from './github/github.service';
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { AnswersModule } from './answers/answers.module';
     AuthModule, AnswersModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, GithubService],
 })
 export class AppModule {}
