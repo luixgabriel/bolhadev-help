@@ -9,6 +9,7 @@ import { join } from 'path';
 import { AnswersModule } from './answers/answers.module';
 import { GithubService } from './github/github.service';
 import { CommentModule } from './comment/comment.module';
+import { ChatGateway } from './socket-gateway';
 
 @Module({
   imports: [
@@ -18,9 +19,9 @@ import { CommentModule } from './comment/comment.module';
     }),
     UsersModule, 
     DoubtsModule, 
-    AuthModule, AnswersModule, CommentModule,
+    AuthModule, AnswersModule, CommentModule
   ],
   controllers: [AppController],
-  providers: [AppService, GithubService],
+  providers: [AppService, GithubService, ChatGateway],
 })
 export class AppModule {}
