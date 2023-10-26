@@ -101,7 +101,6 @@ export class AnswersService {
     let answer = await this.findOne(id)
     answer = await this.update(answer.id, {likes: answer.likes + 1})
     return answer
-    
   }
 
   async remove(id: string) {
