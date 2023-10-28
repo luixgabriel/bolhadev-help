@@ -21,6 +21,9 @@
     "testUser": "npm test -t src/users/users.controller.spec.ts",
     "testAuth": "npm test -t src/auth/auth.service.spec.ts"
   },
+  "engines": {
+    "node": "18"
+  },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
