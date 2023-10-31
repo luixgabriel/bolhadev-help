@@ -18,6 +18,7 @@ export class GithubService {
                 },
             }
         );
+        console.log(response.data)
         return response.data.access_token;
     }
 
@@ -27,6 +28,7 @@ export class GithubService {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
+        console.log(response.data)
         return response.data;
     }
 }

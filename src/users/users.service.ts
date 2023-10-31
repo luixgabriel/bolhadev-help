@@ -10,7 +10,6 @@ export class UsersService {
 
   constructor(private prisma: PrismaService){}
   async create(data: CreateUserDto) {
-    console.log(data)
     const salt = await bcrypt.genSalt();
     data.password = await bcrypt.hash(data.password, salt);
     try {
@@ -51,7 +50,7 @@ export class UsersService {
 
   async findByGithubId(id: number){
     try {
-      const user = await this.prisma.user.findFirstOrThrow({where:{
+      const user = await this.prisma.user.findFirst({where:{
         githubId: id
       }})
       return user

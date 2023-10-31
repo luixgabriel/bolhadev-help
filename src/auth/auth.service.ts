@@ -81,11 +81,9 @@ export class AuthService {
         const accessToken = await this.gitHubService.getAccessToken(code);
         const githubUser = await this.gitHubService.getUserInfo(accessToken);
         const user = await this.userService.findByGithubId(githubUser.id);
-
         if (user) {
             return this.createToken(user);
         }
-
         const registerData = AuthRegisterDTO.fromGithubResponse(githubUser);
         return this.register(registerData);
     }

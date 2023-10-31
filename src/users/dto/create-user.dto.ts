@@ -14,6 +14,7 @@ export class CreateUserDto {
         githubId: response.id,
         name: response.name,
         email: response.email || `${response.login}@gmail.com`,
+        imageUrl: response.avatar_url,
         password: response.name + response.id,
     };
 }
@@ -33,6 +34,10 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   password: string;
+
+  @IsString()
+  @IsOptional()
+  imageUrl: string;
 
   @IsArray()
   @IsOptional()
