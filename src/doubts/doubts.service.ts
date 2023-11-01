@@ -37,7 +37,8 @@ constructor(private prisma: PrismaService, private userService: UsersService){}
           createdAt: true,
           user: {
             select: {
-              name: true
+              name: true,
+              imageUrl: true
             }
           },
           Answers: {
