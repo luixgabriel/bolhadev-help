@@ -77,8 +77,9 @@ export class AuthService {
         return this.createToken(user)
     }
 
-    async githubAuth(code: string){
-        const accessToken = await this.gitHubService.getAccessToken(code);
+    async githubAuth(data: {code: string}){
+        console.log(data.code)
+        const accessToken = await this.gitHubService.getAccessToken(data.code);
         const githubUser = await this.gitHubService.getUserInfo(accessToken);
         const user = await this.userService.findByGithubId(githubUser.id);
         if (user) {
