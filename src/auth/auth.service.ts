@@ -21,7 +21,8 @@ export class AuthService {
        const token = this.jwtService.sign({
             id: user.id,
             email: user.email,
-            name: user.name
+            name: user.name,
+            imageUrl: user.imageUrl
         },{
             expiresIn: '7 days',
             issuer: 'bolhadev-help'
@@ -30,6 +31,7 @@ export class AuthService {
             token: token,
             id: user.id,
             name: user.name,
+            imageUrl: user.imageUrl,
             email: user.email
         }
     }
@@ -78,7 +80,6 @@ export class AuthService {
     }
 
     async githubAuth(data: {code: string}){
-        console.log(data.code)
         const accessToken = await this.gitHubService.getAccessToken(data.code);
         const githubUser = await this.gitHubService.getUserInfo(accessToken);
         const user = await this.userService.findByGithubId(githubUser.id);
