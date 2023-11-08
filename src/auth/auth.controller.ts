@@ -20,7 +20,7 @@ export class AuthController {
     console.log(req)
    }
 
-  @Post('auth/github')
+  @Post('api/auth/github')
   async githubAuthRedirect(@Body() data: {code: string}) {
     return this.authService.githubAuth(data)
   }

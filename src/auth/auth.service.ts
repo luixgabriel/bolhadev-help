@@ -80,8 +80,11 @@ export class AuthService {
     }
 
     async githubAuth(data: {code: string}){
+        console.log(data)
         const accessToken = await this.gitHubService.getAccessToken(data.code);
+        console.log(accessToken)
         const githubUser = await this.gitHubService.getUserInfo(accessToken);
+        console.log(githubUser)
         const user = await this.userService.findByGithubId(githubUser.id);
         if (user) {
             return this.createToken(user);
