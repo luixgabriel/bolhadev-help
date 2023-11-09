@@ -5,7 +5,6 @@ import { AuthLoginDTO } from './dto/auth-login.dto'
 import { User } from '@prisma/client'
 import { AuthRegisterDTO } from './dto/auth-register.dto'
 import * as bcrypt from 'bcrypt';
-import * as cookie from 'cookie';
 import { PrismaService } from '../prisma/prisma.service'
 import { UsersService } from '../users/users.service'
 import { GithubService } from '../github/github.service'
@@ -95,12 +94,11 @@ export class AuthService {
                 expiresIn: '7 days',
                 issuer: 'bolhadev-help'
             })
-            console.log(token)
-            const cookies = cookie.serialize('token', token, {
+
+            response.cookie('token', token, {
                 httpOnly: true,
                 maxAge: 7 * 24 * 60 * 60,
-            });
-            response.setHeader('Set-Cookie', cookies); // Define o cookie na resposta HTTP
+            }) 
             response.setHeader('Location', 'http://localhost:3000');
             response.status(302).send();
         }

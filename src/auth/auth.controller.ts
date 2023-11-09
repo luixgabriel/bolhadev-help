@@ -23,7 +23,6 @@ export class AuthController {
 
   @Get('api/auth/github')
   async githubAuthRedirect(@Query('code') data: string, @Res() res: Response) {
-    console.log(data)
     return this.authService.githubAuth(data, res)
   }
 
