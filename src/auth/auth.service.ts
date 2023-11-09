@@ -113,6 +113,7 @@ export class AuthService {
     async githubGetToken(req: Request, res: Response){
         console.log('chamei')
         const cookie = req.cookies['token'];
+        console.log(cookie)
         try {
             const decode = this.checkToken(cookie)
 
