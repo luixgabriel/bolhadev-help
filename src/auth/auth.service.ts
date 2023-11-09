@@ -83,7 +83,6 @@ export class AuthService {
     async githubAuth(code: string, response: Response){
         const accessToken = await this.gitHubService.getAccessToken(code);
         const githubUser = await this.gitHubService.getUserInfo(accessToken);
-        console.log(githubUser)
         const user = await this.userService.findByGithubId(githubUser.id);
         if (user) {
             const token = this.jwtService.sign({
@@ -97,10 +96,9 @@ export class AuthService {
             })
 
             response.cookie('token', token, {
-                httpOnly: true,
                 maxAge: 7 * 24 * 60 * 60,
             }) 
-            response.setHeader('Location', 'http://localhost:3000');
+            response.setHeader('Location', 'https://bolha-dev-help-frontend.vercel.app');
             response.status(302).send();
         }
        
@@ -115,6 +113,7 @@ export class AuthService {
             console.log(decode)
             res.send(decode)
         } catch (e) {
+             console.log(e)
              return res.send(null);
         }
     }
