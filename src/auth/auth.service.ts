@@ -83,6 +83,7 @@ export class AuthService {
     async githubAuth(code: string, response: Response){
         const accessToken = await this.gitHubService.getAccessToken(code);
         const githubUser = await this.gitHubService.getUserInfo(accessToken);
+        console.log(githubUser)
         const user = await this.userService.findByGithubId(githubUser.id);
         if (user) {
             const token = this.jwtService.sign({
@@ -111,7 +112,7 @@ export class AuthService {
         const cookie = req.cookies['token'];
         try {
             const decode = this.checkToken(cookie)
-            return res.send(decode);
+            console.log(decode)
         } catch (e) {
              return res.send(null);
         }

@@ -4,6 +4,7 @@ import axios from 'axios';
 @Injectable()
 export class GithubService {
     async getAccessToken(code: string): Promise<string> {
+        console.log(process.env.GITHUB_CLIENT_ID)
         const response = await axios.post(
             'https://github.com/login/oauth/access_token',
             null,
