@@ -115,9 +115,8 @@ export class AuthService {
         const cookie = req.cookies['token'];
         console.log(cookie)
         try {
-            const decode = this.checkToken(cookie)
-
-            res.send(decode)
+            // const decode = this.checkToken(cookie)
+            res.send(cookie)
         } catch (e) {
              console.log(e)
              return res.send(null);
