@@ -1,5 +1,6 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import {Get, Req, UseGuards} from '@nestjs/common/decorators'
+import {Get, Query, Req, Res, UseGuards} from '@nestjs/common/decorators'
+import { Request, Response } from 'express'
 import { AuthService } from './auth.service';
 import { AuthLoginDTO } from './dto/auth-login.dto';
 import { AuthRegisterDTO } from './dto/auth-register.dto';
@@ -21,8 +22,14 @@ export class AuthController {
    }
 
   @Get('api/auth/github')
-  async githubAuthRedirect(@Body() data: {code: string}) {
-    return this.authService.githubAuth(data)
+  async githubAuthRedirect(@Query('code') data: string, @Res() res: Response) {
+    console.log(data)
+    return this.authService.githubAuth(data, res)
+  }
+
+  @Get('api/auth/github/user')
+  async githubGetToken(@Req() req: Request, @Res() res: Response) {
+    return this.authService.githubGetToken(req, res)
   }
 
   @Post('auth/login')

@@ -1,9 +1,11 @@
 import {HttpException, HttpStatus, Injectable, BadRequestException, UnauthorizedException} from '@nestjs/common'
 import {JwtService} from '@nestjs/jwt'
+import { Request, Response } from 'express'
 import { AuthLoginDTO } from './dto/auth-login.dto'
 import { User } from '@prisma/client'
 import { AuthRegisterDTO } from './dto/auth-register.dto'
 import * as bcrypt from 'bcrypt';
+import * as cookie from 'cookie';
 import { PrismaService } from '../prisma/prisma.service'
 import { UsersService } from '../users/users.service'
 import { GithubService } from '../github/github.service'
@@ -79,18 +81,42 @@ export class AuthService {
         return this.createToken(user)
     }
 
-    async githubAuth(data: {code: string}){
-        console.log(data)
-        const accessToken = await this.gitHubService.getAccessToken(data.code);
-        console.log(accessToken)
+    async githubAuth(code: string, response: Response){
+        const accessToken = await this.gitHubService.getAccessToken(code);
         const githubUser = await this.gitHubService.getUserInfo(accessToken);
-        console.log(githubUser)
         const user = await this.userService.findByGithubId(githubUser.id);
         if (user) {
-            return this.createToken(user);
+            const token = this.jwtService.sign({
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                imageUrl: user.imageUrl
+            },{
+                expiresIn: '7 days',
+                issuer: 'bolhadev-help'
+            })
+            console.log(token)
+            const cookies = cookie.serialize('token', token, {
+                httpOnly: true,
+                maxAge: 7 * 24 * 60 * 60,
+            });
+            response.setHeader('Set-Cookie', cookies); // Define o cookie na resposta HTTP
+            response.setHeader('Location', 'http://localhost:3000');
+            response.status(302).send();
         }
-        const registerData = AuthRegisterDTO.fromGithubResponse(githubUser);
-        return this.register(registerData);
+       
+        // const registerData = AuthRegisterDTO.fromGithubResponse(githubUser);
+        // return this.register(registerData);
+    }
+
+    async githubGetToken(req: Request, res: Response){
+        const cookie = req.cookies['token'];
+        try {
+            const decode = this.checkToken(cookie)
+            return res.send(decode);
+        } catch (e) {
+             return res.send(null);
+        }
     }
 
 }
