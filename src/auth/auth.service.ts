@@ -96,12 +96,12 @@ export class AuthService {
             })
 
             response.cookie('token', token, {
-                domain: 'vercel.app',
                 secure: true,
                 sameSite: 'none',
                 httpOnly: true, // Restringe o acesso via JavaScript
                 maxAge: 7 * 24 * 60 * 60,
             })
+          
             response.setHeader('Location', 'https://bolha-dev-help-frontend.vercel.app');
             response.status(302).send();
         }
