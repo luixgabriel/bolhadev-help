@@ -102,7 +102,7 @@ export class AuthService {
                 maxAge: 7 * 24 * 60 * 60,
             })
           
-            response.setHeader('Location', 'https://bolha-dev-help-frontend.vercel.app');
+            response.setHeader('Location', 'http://localhost:3000');
             response.status(302).send();
         }
        
@@ -111,10 +111,11 @@ export class AuthService {
     }
 
     async githubGetToken(req: Request, res: Response){
+        console.log('chamei')
         const cookie = req.cookies['token'];
         try {
             const decode = this.checkToken(cookie)
-            console.log(decode)
+            
             res.send(decode)
         } catch (e) {
              console.log(e)
