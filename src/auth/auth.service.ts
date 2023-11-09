@@ -113,6 +113,7 @@ export class AuthService {
         try {
             const decode = this.checkToken(cookie)
             console.log(decode)
+            res.send(decode)
         } catch (e) {
              return res.send(null);
         }
