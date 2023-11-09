@@ -96,6 +96,7 @@ export class AuthService {
             })
 
             response.cookie('token', token, {
+                domain: '.vercel.app',
                 maxAge: 7 * 24 * 60 * 60,
             }) 
             response.setHeader('Location', 'https://bolha-dev-help-frontend.vercel.app');
