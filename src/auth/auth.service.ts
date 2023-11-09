@@ -96,9 +96,10 @@ export class AuthService {
             })
 
             response.cookie('token', token, {
-                domain: '.vercel.app',
+                domain: 'bolha-dev-help-frontend.vercel.app', // Apenas o domínio
+                secure: true, // Defina como true se estiver usando HTTPS
                 maxAge: 7 * 24 * 60 * 60,
-            }) 
+            })
             response.setHeader('Location', 'https://bolha-dev-help-frontend.vercel.app');
             response.status(302).send();
         }
