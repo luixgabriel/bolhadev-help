@@ -96,7 +96,7 @@ export class AuthService {
             })
 
             response.cookie('token', token, {
-                secure: true,
+                
                 sameSite: 'none',
                 httpOnly: true, // Restringe o acesso via JavaScript
                 maxAge: 7 * 24 * 60 * 60,
@@ -112,6 +112,7 @@ export class AuthService {
 
     async githubGetToken(req: Request, res: Response){
         console.log('chamei')
+        console.log(req.cookies)
         const cookie = req.cookies['token'];
         console.log(cookie)
         try {
