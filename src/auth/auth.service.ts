@@ -96,7 +96,7 @@ export class AuthService {
             })
 
             response.cookie('token', token, {
-                domain: '.vercel.app',
+                domain: 'vercel.app',
                 secure: true,
                 sameSite: 'none',
                 httpOnly: true, // Restringe o acesso via JavaScript
