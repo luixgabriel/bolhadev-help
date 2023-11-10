@@ -1,6 +1,6 @@
 import {HttpException, HttpStatus, Injectable, BadRequestException, UnauthorizedException} from '@nestjs/common'
 import {JwtService} from '@nestjs/jwt'
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { AuthLoginDTO } from './dto/auth-login.dto'
 import { User } from '@prisma/client'
 import { AuthRegisterDTO } from './dto/auth-register.dto'
@@ -80,44 +80,21 @@ export class AuthService {
         return this.createToken(user)
     }
 
-    async githubAuth(code: string, response: Response){
-        const accessToken = await this.gitHubService.getAccessToken(code);
+    async githubAuth(data: {code: string} ){
+        const accessToken = await this.gitHubService.getAccessToken(data.code);
         const githubUser = await this.gitHubService.getUserInfo(accessToken);
         const user = await this.userService.findByGithubId(githubUser.id);
         if (user) {
-            const token = this.jwtService.sign({
-                id: user.id,
-                email: user.email,
-                name: user.name,
-                imageUrl: user.imageUrl
-            },{
-                expiresIn: '7 days',
-                issuer: 'bolhadev-help'
-            })
-
-            response.cookie('token', token, {
-                
-                sameSite: 'none',
-                httpOnly: true, // Restringe o acesso via JavaScript
-                maxAge: 7 * 24 * 60 * 60,
-            })
-          
-            response.setHeader('Location', 'https://bolha-dev-help-frontend.vercel.app');
-            response.status(302).send();
+            return this.createToken(user);
         }
-       
-        // const registerData = AuthRegisterDTO.fromGithubResponse(githubUser);
-        // return this.register(registerData);
+        const registerData = AuthRegisterDTO.fromGithubResponse(githubUser);
+        return this.register(registerData);
     }
 
-    async githubGetToken(req: Request, res: Response){
-        console.log('chamei')
-        console.log(req.cookies)
-        const cookie = req.cookies['token'];
-        console.log(cookie)
+    async githubGetToken(res: Response, token){
         try {
-            // const decode = this.checkToken(cookie)
-            res.send(cookie)
+            const decode = this.checkToken(token.token)
+            res.send(decode)
         } catch (e) {
              console.log(e)
              return res.send(null);
