@@ -70,6 +70,34 @@ constructor(private prisma: PrismaService, private userService: UsersService){}
     try {
       const doubt = await this.prisma.doubts.findFirstOrThrow({where:{
         id
+      },   select: {
+        id: true,
+        title: true,
+        category: true,
+        image: true,
+        description: true,
+        createdAt: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            imageUrl: true
+          }
+        },
+        Answers: {
+          select: {
+            description: true,
+            likes: true,
+            createdAt: true,
+            Comment: {
+              select: {
+                content: true,
+                likes: true,
+                createdAt: true,
+              }
+            }
+          }
+        },
       }})
       return doubt
     } catch (error) {
@@ -118,6 +146,6 @@ constructor(private prisma: PrismaService, private userService: UsersService){}
 
   async isOwner(id: string, userId: string): Promise<boolean> {
     const doubt = await this.findOne(id);
-    return doubt.userId === userId;
+    return doubt.user.id === userId;
 }
 }
