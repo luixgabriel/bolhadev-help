@@ -86,6 +86,7 @@ constructor(private prisma: PrismaService, private userService: UsersService){}
         },
         Answers: {
           select: {
+            id: true,
             description: true,
             likes: true,
             createdAt: true,
@@ -95,7 +96,12 @@ constructor(private prisma: PrismaService, private userService: UsersService){}
                 likes: true,
                 createdAt: true,
               }
-            }
+            },
+            user:{
+              select:{
+                name: true
+              }
+            },
           }
         },
       }})
