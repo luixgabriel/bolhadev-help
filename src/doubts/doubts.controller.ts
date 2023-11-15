@@ -8,6 +8,13 @@ import { join } from 'path';
 import { diskStorage } from 'multer';
 import { Request, Response } from 'express';
 import { AuthGuard } from '../guards/auth.guard';
+import {v2 as cloudinary} from 'cloudinary';
+          
+cloudinary.config({ 
+  cloud_name: process.env.CLOUD_API_HOST, 
+  api_key: process.env.CLOUD_API_KEY, 
+  api_secret: process.env.CLOUD_API_SECRET
+});
 
 @Controller('doubts')
 export class DoubtsController {
@@ -24,11 +31,10 @@ export class DoubtsController {
   }))
 
   @Post()
-  create(@Body() createDoubtDto: CreateDoubtDto, @UploadedFile() image: Express.Multer.File) {
+  async create(@Body() createDoubtDto: CreateDoubtDto, @UploadedFile() image: Express.Multer.File) {
     if(image){
-      const filename = image.filename;
-      const fullPath = `http://localhost:3000/${filename}`;
-      return this.doubtsService.create({...createDoubtDto, image: fullPath});
+      const data = await cloudinary.uploader.upload(image.path)
+      return this.doubtsService.create({...createDoubtDto, image: data.url});
     }else{
       return this.doubtsService.create(createDoubtDto);
     }
