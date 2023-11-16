@@ -35,15 +35,16 @@ model Doubts {
 }
 
 model Answers {
-  id          String    @id @default(uuid())
-  description String
-  likes       Int       @default(0)
-  createdAt   DateTime  @default(now())
-  doubts      Doubts    @relation(fields: [doubtsId], references: [id])
-  doubtsId    String
-  user        User      @relation(fields: [userId], references: [id])
-  userId      String
-  Comment     Comment[]
+  id                  String    @id @default(uuid())
+  description         String
+  likes               Int       @default(0)
+  usersLikeThisAnswer String[]  @default([])
+  createdAt           DateTime  @default(now())
+  doubts              Doubts    @relation(fields: [doubtsId], references: [id])
+  doubtsId            String
+  user                User      @relation(fields: [userId], references: [id])
+  userId              String
+  Comment             Comment[]
 }
 
 model Comment {

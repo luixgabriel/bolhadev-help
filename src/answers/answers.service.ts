@@ -37,6 +37,7 @@ export class AnswersService {
             id: true,
             description: true,
             likes: true,
+            usersLikeThisAnswer: true,
             createdAt: true,
             user: {
               select: {
