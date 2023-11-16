@@ -102,6 +102,9 @@ constructor(private prisma: PrismaService, private userService: UsersService){}
                 name: true
               }
             },
+          },
+          orderBy: {
+            createdAt: 'desc'
           }
         },
       }})

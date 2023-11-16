@@ -26,7 +26,7 @@ export class AnswersController {
   }
 
   // @UseGuards(AuthGuard)
-  @Get('like-answer/:id')
+  @Patch('like/:id')
   likeAnswer(@Param('id') id: string) {
     return this.answersService.like(id);
   }

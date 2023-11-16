@@ -97,6 +97,7 @@ export class AnswersService {
   }
 
   async like(id: string){
+   
     if(!await this.check(id)) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
     let answer = await this.findOne(id)
     answer = await this.update(answer.id, {likes: answer.likes + 1})
