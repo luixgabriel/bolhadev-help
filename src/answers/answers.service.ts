@@ -97,11 +97,13 @@ export class AnswersService {
      }
   }
 
-  async like(id: string){
-   
+  async like(id: string, userId: string){
     if(!await this.check(id)) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
     let answer = await this.findOne(id)
-    answer = await this.update(answer.id, {likes: answer.likes + 1})
+    const userHaslikes = answer.usersLikeThisAnswer
+    if(userHaslikes.includes(userId)) throw new HttpException('This user already liked this answer', HttpStatus.FOUND)
+    userHaslikes.push(userId)
+    answer = await this.update(answer.id, {likes: answer.likes + 1, usersLikeThisAnswer: userHaslikes})
     return answer
   }
 
