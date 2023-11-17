@@ -31,6 +31,11 @@ export class AnswersController {
     return this.answersService.like(id, data.userId);
   }
 
+  @Patch('dislike/:id')
+  dislikeAnswer(@Param('id') id: string, @Body() data: {userId: string}) {
+    return this.answersService.dislike(id, data.userId);
+  }
+
   
   @UseGuards(AuthGuard)
   @Patch(':id')
