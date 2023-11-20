@@ -28,6 +28,16 @@ export class CommentController {
     return this.commentService.update(id, updateCommentDto);
   }
 
+  @Patch('like/:id')
+  likeAnswer(@Param('id') id: string, @Body() data: {userId: string}) {
+    return this.commentService.like(id, data.userId);
+  }
+
+  @Patch('dislike/:id')
+  dislikeAnswer(@Param('id') id: string, @Body() data: {userId: string}) {
+    return this.commentService.dislike(id, data.userId);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string, @Res() res: Response) {
     return this.commentService.remove(id, res);

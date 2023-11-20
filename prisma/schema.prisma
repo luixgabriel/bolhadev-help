@@ -48,12 +48,13 @@ model Answers {
 }
 
 model Comment {
-  id        String   @id @default(uuid())
-  content   String
-  likes     Int      @default(0)
-  createdAt DateTime @default(now())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  answerId  String
-  answer    Answers  @relation(fields: [answerId], references: [id])
+  id                   String   @id @default(uuid())
+  content              String
+  likes                Int      @default(0)
+  usersLikeThisComment String[] @default([])
+  createdAt            DateTime @default(now())
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id])
+  answerId             String
+  answer               Answers  @relation(fields: [answerId], references: [id])
 }

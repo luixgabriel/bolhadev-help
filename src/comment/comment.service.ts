@@ -77,10 +77,45 @@ export class CommentService {
     }
   }
 
-  async like(id: string){
-    if(!await this.check(id)) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
-    let comment = await this.findOne(id)
-    comment = await this.update(comment.id, {likes: comment.likes + 1})
-    return comment
+  async like(id: string, userId: string) {
+    if (!(await this.check(id)))
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    let comment = await this.findOne(id);
+    const userHaslikes = comment.usersLikeThisComment
+    if (userHaslikes.includes(userId))
+      throw new HttpException(
+        'This user already liked this comment',
+        HttpStatus.FOUND,
+      );
+    userHaslikes.push(userId);
+    comment = await this.update(comment.id, {
+      likes: comment.likes + 1,
+      usersLikeThisComment: userHaslikes,
+    });
+    return comment;
+  }
+
+  async dislike(id: string, userId: string) {
+    if (!(await this.check(id)))
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+
+    let comment = await this.findOne(id);
+    const userHasLikes = comment.usersLikeThisComment;
+
+    const index = userHasLikes.indexOf(userId);
+
+    if (index === -1) {
+      throw new HttpException(
+        'This user did not like this comment',
+        HttpStatus.FOUND,
+      );
+    }
+    
+    userHasLikes.splice(index, 1);
+    comment = await this.update(comment.id, {
+      likes: comment.likes - 1,
+      usersLikeThisComment: userHasLikes,
+    });
+    return comment;
   }
 }

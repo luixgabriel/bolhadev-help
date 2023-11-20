@@ -100,6 +100,7 @@ constructor(private prisma: PrismaService, private userService: UsersService){}
                     name: true
                   }
                 },
+                usersLikeThisComment: true,
                 content: true,
                 likes: true,
                 createdAt: true,

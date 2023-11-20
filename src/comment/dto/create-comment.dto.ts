@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { IsArray, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateCommentDto {
     @IsString()
@@ -7,6 +7,10 @@ export class CreateCommentDto {
     @IsOptional()
     @IsNumber()
     likes: number;
+
+    @IsOptional()
+    @IsArray()
+    usersLikeThisComment: string[]
   
     @IsString()
     userId: string;
