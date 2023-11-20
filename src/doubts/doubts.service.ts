@@ -93,6 +93,13 @@ constructor(private prisma: PrismaService, private userService: UsersService){}
             createdAt: true,
             Comment: {
               select: {
+                id: true,
+                user:{
+                  select:{
+                    id: true,
+                    name: true
+                  }
+                },
                 content: true,
                 likes: true,
                 createdAt: true,
