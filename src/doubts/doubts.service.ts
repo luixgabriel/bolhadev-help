@@ -104,6 +104,9 @@ constructor(private prisma: PrismaService, private userService: UsersService){}
                 content: true,
                 likes: true,
                 createdAt: true,
+              },
+              orderBy: {
+                createdAt: 'desc'
               }
             },
             user:{
