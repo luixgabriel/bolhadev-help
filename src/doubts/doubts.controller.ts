@@ -45,6 +45,11 @@ export class DoubtsController {
     return this.doubtsService.findAll();
   }
 
+  @Get('/user-doubts/:id')
+  findAllById(@Param('id') id: string) {
+    return this.doubtsService.userDoubtsById(id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.doubtsService.findOne(id);

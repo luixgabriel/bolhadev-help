@@ -169,4 +169,39 @@ constructor(private prisma: PrismaService, private userService: UsersService){}
     const doubt = await this.findOne(id);
     return doubt.user.id === userId;
 }
+
+async userDoubtsById(id: string){
+  if(!await this.userService.check(id)) throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+  return await this.prisma.doubts.findMany({
+    where: { userId: id },
+    select: {
+      id: true,
+      title: true,
+      category: true,
+      image: true,
+      description: true,
+      createdAt: true,
+      user: {
+        select: {
+          name: true,
+          imageUrl: true
+        }
+      },
+      Answers: {
+        select: {
+          description: true,
+          likes: true,
+          createdAt: true,
+          Comment: {
+            select: {
+              content: true,
+              likes: true,
+              createdAt: true,
+            }
+          }
+        }
+      },
+    }
+  });
+}
 }
