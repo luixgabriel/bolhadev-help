@@ -29,7 +29,7 @@ export class DoubtsController {
       }
     })
   }))
-
+  @UseGuards(AuthGuard)
   @Post()
   async create(@Body() createDoubtDto: CreateDoubtDto, @UploadedFile() image: Express.Multer.File) {
     if(image){
@@ -55,10 +55,26 @@ export class DoubtsController {
     return this.doubtsService.findOne(id);
   }
 
+  @UseInterceptors(FileInterceptor('image', 
+  {
+    storage: diskStorage({
+      destination: join(__dirname, '..', '..', 'storage'),
+      filename: (req, file, cb) => {
+        cb(null, file.originalname)
+      }
+    })
+  }))
+  
   @UseGuards(AuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDoubtDto: UpdateDoubtDto, @Req() request: Request) {
-    return this.doubtsService.update(id, request.user.id, updateDoubtDto);
+  async update(@Param('id') id: string, @Body() updateDoubtDto: UpdateDoubtDto, @UploadedFile() image: Express.Multer.File, @Req() request: Request) {
+    if(image){
+      const data = await cloudinary.uploader.upload(image.path)
+      console.log(data)
+      return this.doubtsService.update(id, request.user.id, {...updateDoubtDto, image: data.url});
+    }else{
+      return this.doubtsService.update(id, request.user.id, updateDoubtDto )
+    }
   }
 
   @UseGuards(AuthGuard)
