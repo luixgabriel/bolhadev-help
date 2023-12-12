@@ -185,6 +185,11 @@ export class AnswersService {
           imageUrl: true
         },
       },
+      doubts: {
+        select: {
+          id: true,
+        }
+      },
       Comment: true
    
     },})
