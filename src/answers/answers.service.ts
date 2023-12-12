@@ -167,4 +167,28 @@ export class AnswersService {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
   }
+
+  async userAnswersById(id: string){
+    return await this.prisma.answers.findMany({where:{
+      userId: id
+    },
+    select: {
+      id: true,
+      description: true,
+      likes: true,
+      usersLikeThisAnswer: true,
+      createdAt: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          imageUrl: true
+        },
+      },
+      Comment: true
+   
+    },})
+    
+
+  }
 }

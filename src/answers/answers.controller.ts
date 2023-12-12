@@ -20,6 +20,11 @@ export class AnswersController {
     return this.answersService.findAll();
   }
 
+  @Get('user-answers/:id')
+  findAllByid(@Param('id') id: string){
+    return this.answersService.userAnswersById(id)
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.answersService.findOne(id);
