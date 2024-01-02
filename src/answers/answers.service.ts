@@ -99,6 +99,8 @@ export class AnswersService {
       });
       return answers;
     } catch (error) {
+      console.log(error)
+
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
   }
