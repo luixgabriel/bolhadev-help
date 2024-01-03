@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } from '@nestjs/common';
-import {Req, Res, UploadedFile, UseGuards} from '@nestjs/common/decorators'
+import {Query, Req, Res, UploadedFile, UseGuards} from '@nestjs/common/decorators'
 import { DoubtsService } from './doubts.service';
 import { CreateDoubtDto } from './dto/create-doubt.dto';
 import { UpdateDoubtDto } from './dto/update-doubt.dto';
@@ -45,9 +45,14 @@ export class DoubtsController {
     return this.doubtsService.findAll();
   }
 
-  @Get('/user-doubts/:id')
+  @Get('user-doubts/:id')
   findAllById(@Param('id') id: string) {
     return this.doubtsService.userDoubtsById(id);
+  }
+
+  @Get('search-doubt')
+  async searchDoubt(@Query('filter') searchQuery: string) {
+    return await this.doubtsService.searchQuery(searchQuery);
   }
 
   @Get(':id')

@@ -204,4 +204,23 @@ async userDoubtsById(id: string){
     }
   });
 }
+
+async searchQuery(searchQuery: string){
+  try {
+    const searchData = await this.prisma.doubts.findMany({
+      where: {
+        OR: [
+          { title: {contains: searchQuery} },
+          { category: { contains: searchQuery } },
+          { description: { contains: searchQuery } },
+        ],
+      },
+    });
+
+    return searchData
+  } catch (error) {
+    console.error(error);
+    throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+  }
+}
 }
