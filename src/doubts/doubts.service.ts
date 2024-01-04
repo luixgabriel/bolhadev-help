@@ -205,22 +205,65 @@ async userDoubtsById(id: string){
   });
 }
 
-async searchQuery(searchQuery: string){
+separatedWordsAndOrganize = (separatedWords: string[]) => {
+  const result = separatedWords
+    .map((item) => (item.length >= 3 ? item : null))
+    .filter((item) => item !== null);
+
+  return result;
+};
+
+async searchQuery(searchQuery: string) {
+  const separatedWords = searchQuery.split(' ');
+  const conditions = this.separatedWordsAndOrganize(separatedWords).map((word) => ({
+    OR: [
+      { title: { contains: word } },
+      { description: { contains: word } },
+      { category: { contains: word } },
+    ],
+  }));
+
   try {
     const searchData = await this.prisma.doubts.findMany({
       where: {
-        OR: [
-          { title: {contains: searchQuery} },
-          { category: { contains: searchQuery } },
-          { description: { contains: searchQuery } },
-        ],
+        OR: conditions,
       },
+      select: {
+        id: true,
+        title: true,
+        category: true,
+        image: true,
+        description: true,
+        createdAt: true,
+        user: {
+          select: {
+            name: true,
+            imageUrl: true
+          }
+        },
+        Answers: {
+          select: {
+            description: true,
+            likes: true,
+            createdAt: true,
+            Comment: {
+              select: {
+                content: true,
+                likes: true,
+                createdAt: true,
+              }
+            }
+          }
+        },
+      }
     });
 
-    return searchData
+    return searchData;
   } catch (error) {
     console.error(error);
-    throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
+    throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
   }
 }
+
+
 }
