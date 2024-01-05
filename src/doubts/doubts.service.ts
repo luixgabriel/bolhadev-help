@@ -215,18 +215,15 @@ separatedWordsAndOrganize = (separatedWords: string[]) => {
 
 async searchQuery(searchQuery: string) {
   const separatedWords = searchQuery.split(' ');
-  const conditions = this.separatedWordsAndOrganize(separatedWords).map((word) => ({
-    OR: [
-      { title: { contains: word } },
-      { description: { contains: word } },
-      { category: { contains: word } },
-    ],
-  }));
-
+ 
   try {
     const searchData = await this.prisma.doubts.findMany({
       where: {
-        OR: conditions,
+        OR: this.separatedWordsAndOrganize(separatedWords).flatMap((word) => [
+          { title: { contains: word, mode: 'insensitive' } },
+          { description: { contains: word, mode: 'insensitive' } },
+          { category: { contains: word, mode: 'insensitive' } },
+        ]),
       },
       select: {
         id: true,
@@ -238,8 +235,8 @@ async searchQuery(searchQuery: string) {
         user: {
           select: {
             name: true,
-            imageUrl: true
-          }
+            imageUrl: true,
+          },
         },
         Answers: {
           select: {
@@ -251,11 +248,11 @@ async searchQuery(searchQuery: string) {
                 content: true,
                 likes: true,
                 createdAt: true,
-              }
-            }
-          }
+              },
+            },
+          },
         },
-      }
+      },
     });
 
     return searchData;
